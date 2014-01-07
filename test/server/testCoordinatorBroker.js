@@ -12,7 +12,7 @@ describe("coordinatorBroker.js", function(){
   var factory = require('../../lib/server/coordinatorBroker.js');
 
   var self = {host: 'localhost:1234', name: 'test'};
-  var config = {host: 'coordinator.lb', port: 1234, heartbeatDuration: 60000};
+  var config = {host: 'coordinator.lb', port: 1234, heartbeatInterval: 60000};
   var gossipHandler;
 
   var coordinatorClientFactory = sinon.stub();
@@ -30,7 +30,7 @@ describe("coordinatorBroker.js", function(){
     expect(gossipHandler).to.exist;
 
     expect(polling.repeat).have.been.calledOnce;
-    expect(polling.repeat).have.been.calledWith('resync-coordinators', sinon.match.func, config.heartbeatDuration * 10);
+    expect(polling.repeat).have.been.calledWith('resync-coordinators', sinon.match.func, config.heartbeatInterval * 10);
 
     // It should have itself registered right now
     expect(gossipHandler.getCoordinators()).to.deep.equal([self]);
@@ -73,7 +73,7 @@ describe("coordinatorBroker.js", function(){
 
         gossipHandler.addCoordinator(coordinator);
         expect(gossipHandler.getCoordinators()).to.deep.equal([self, coordinator]);
-        expect(polling.repeat).have.been.calledWith(sinon.match.string, sinon.match.func, config.heartbeatDuration);
+        expect(polling.repeat).have.been.calledWith(sinon.match.string, sinon.match.func, config.heartbeatInterval);
 
         // Setup the client to return a new coordinator
         var newCoordinator = {host: 'localhost', port: 22222}

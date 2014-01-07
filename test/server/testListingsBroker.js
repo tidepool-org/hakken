@@ -8,7 +8,7 @@ describe("listingsBroker.js", function(){
   var factory = require('../../lib/server/listingsBroker.js');
 
   var config = { 
-    heartbeatDuration: 60000,
+    heartbeatInterval: 60000,
     missedHeartbeatsAllowed: 3
   };
   var listingsBroker;
@@ -26,7 +26,7 @@ describe("listingsBroker.js", function(){
 
       expect(polling.repeat).have.been.calledOnce;
       expect(polling.repeat).have.been.calledWith(
-        "heartbeat-checker", sinon.match.func, config.heartbeatDuration
+        "heartbeat-checker", sinon.match.func, config.heartbeatInterval
       );
 
       heartbeatFn = polling.repeat.getCall(0).args[1];
@@ -61,7 +61,7 @@ describe("listingsBroker.js", function(){
       sinon.stub(timeProvider, "getTime").returns(0);
       listingsBroker.addListing(listing1);
       hasListings(listing1);
-      heartbeatCheckAt(config.heartbeatDuration * 3 + 1);
+      heartbeatCheckAt(config.heartbeatInterval * 3 + 1);
 
       expect(listingsBroker.getServices()).is.empty;
       expect(listingsBroker.getServiceListings(listing1.service)).is.null;
@@ -75,31 +75,31 @@ describe("listingsBroker.js", function(){
       timeProvider.getTime.returns(0);
       listingsBroker.addListing(listing1);
 
-      timeProvider.getTime.returns(config.heartbeatDuration * 10);
+      timeProvider.getTime.returns(config.heartbeatInterval * 10);
       listingsBroker.addListing(anotherListing);
       hasListings(listing1, anotherListing);
 
-      heartbeatCheckAt(config.heartbeatDuration);
+      heartbeatCheckAt(config.heartbeatInterval);
       hasListings(listing1, anotherListing);
 
-      heartbeatCheckAt(config.heartbeatDuration * 3);
+      heartbeatCheckAt(config.heartbeatInterval * 3);
       hasListings(listing1, anotherListing);
 
-      heartbeatCheckAt((config.heartbeatDuration * 3) + 1);
+      heartbeatCheckAt((config.heartbeatInterval * 3) + 1);
       hasListings(anotherListing);
 
-      heartbeatCheckAt(config.heartbeatDuration * 13);
+      heartbeatCheckAt(config.heartbeatInterval * 13);
       hasListings(anotherListing);
 
-      timeProvider.getTime.returns((config.heartbeatDuration * 13));
+      timeProvider.getTime.returns((config.heartbeatInterval * 13));
       listingsBroker.listingHeartbeat(anotherListing);
-      heartbeatCheckAt((config.heartbeatDuration * 13) + 1);
+      heartbeatCheckAt((config.heartbeatInterval * 13) + 1);
       hasListings(anotherListing);
 
-      heartbeatCheckAt(config.heartbeatDuration * 16);
+      heartbeatCheckAt(config.heartbeatInterval * 16);
       hasListings(anotherListing);
 
-      heartbeatCheckAt((config.heartbeatDuration * 16) + 1);
+      heartbeatCheckAt((config.heartbeatInterval * 16) + 1);
       expect(listingsBroker.getServices()).is.empty;
     });
   });

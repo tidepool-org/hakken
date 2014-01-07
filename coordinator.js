@@ -12,30 +12,15 @@
 (function() {
   'use strict';
 
-  var restify = require('restify');
-
   var config = require('./env.js');
-  var log = require('./lib/log.js')('server.js');
-
-  var serverFactory = require('./lib/common/serverFactory.js');
 
   function run() {
-    var polling = require('./lib/common/polling.js');
-    
     var coordinatorBroker = require('./lib/server/coordinatorBroker.js')(
       { host: config.host + ':' + config.port },
-      config.discovery,
-      require('./common/coordinatorClient.js'),
-      polling
+      config.discovery
     );
-    
-    var listingsBroker = require('./server/listingsBroker.js')(
-      config.discovery, polling      
-    );
-
-    require("./server/coordinatorServer.js")(
-      serverFactory, coordinatorBroker, listingsBroker, config.discovery
-    ).start();
+    var listingsBroker = require('./lib/server/listingsBroker.js')(config.discovery);
+    require("./lib/server/coordinatorServer.js")(coordinatorBroker, listingsBroker, config.discovery).start();
   }
 
   run();

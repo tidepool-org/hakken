@@ -8,8 +8,6 @@ var mockableObject = fixture.mockableObject;
 var config = {port: 23000};
 
 describe("coordinatorServer.js", function(){
-  var serverFactory = require('../../lib/common/serverFactory.js');
-  
   var coordinatorBroker = mockableObject.make("addCoordinator", "getCoordinators");
   var listingsBroker = mockableObject.make(
     "addListing", "listingHeartbeat", "getServices", "getServiceListings"
@@ -18,9 +16,7 @@ describe("coordinatorServer.js", function(){
   var api
 
   before(function(){
-    var gossipServer = require('../../lib/server/coordinatorServer.js')(
-      serverFactory, coordinatorBroker, listingsBroker, config
-    );
+    var gossipServer = require('../../lib/server/coordinatorServer.js')(coordinatorBroker, listingsBroker, config);
     gossipServer.start();
 
     api = supertest('http://localhost:' + config.port);

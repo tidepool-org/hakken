@@ -24,7 +24,7 @@ describe('hakken.js', function(){
       mockableObject.reset(polling, testClient);
 
       coordinatorClientFactory.returns(testClient);
-      hakken = hakkenFactory(hakkenConfig, coordinatorClientFactory, polling);
+      hakken = hakkenFactory(hakkenConfig, null, coordinatorClientFactory, polling);
 
       expect(coordinatorClientFactory).have.been.calledOnce;
       expect(coordinatorClientFactory).have.been.calledWith(
@@ -116,6 +116,20 @@ describe('hakken.js', function(){
         });
       });
 
+      it("never updates the watch without coordinators", function(done){
+        sinon.stub(polling, 'repeat');
+        var watch = hakken.watch('billy');
+
+        expect(polling.repeat).have.been.calledOnce;
+
+        var watchFn = polling.repeat.getCall(0).args[1];
+        expect(watch.get()).is.empty;
+        watchFn(function (err) {
+          expect(watch.get()).is.empty;
+          done();
+        });
+      });
+
       describe('with coordinators', function(){
         var client1 = mockableObject.make('getCoordinators', 'getListings', 'getHost', 'listingHeartbeat');
         var client2 = mockableObject.make('getCoordinators', 'getListings', 'getHost', 'listingHeartbeat');
@@ -161,13 +175,13 @@ describe('hakken.js', function(){
           })
         });
 
-        it("should remove a coordinator on failure to poll", function(done){
+        it("should remove a coordinator on failure to poll-2", function(done){
           expect(hakken.getCoordinators()).deep.equals(['client1', 'client2']);
-          sinon.stub(client1, 'getCoordinators').callsArgWith(0, { message: 'failure!' });
-          poller1(function(err){
+          sinon.stub(client2, 'getCoordinators').callsArgWith(0, { message: 'failure!' });
+          poller2(function(err){
             expect(err).equals('stop');
-            expect(client1.getCoordinators).have.been.calledOnce;
-            expect(hakken.getCoordinators()).deep.equals(['client2']);
+            expect(client2.getCoordinators).have.been.calledOnce;
+            expect(hakken.getCoordinators()).deep.equals(['client1']);
             done();
           });
         });
@@ -188,7 +202,7 @@ describe('hakken.js', function(){
           });
         });
 
-        it("doesn't add listings without a service watch placed", function(done){
+        it("doesn't publish anything without publish() getting called", function(done){
           publishFn(function(err){
             expect(err).to.not.exist;
             done();
@@ -257,6 +271,32 @@ describe('hakken.js', function(){
               expect(client1.getListings).have.been.calledWith('billy', sinon.match.func);
               expect(watch.get()).deep.equals(listings);
               done();
+            });
+          });
+
+          it("falls back to other coordinators on coordinator failure", function(done){
+            var listings = [{service: 'billy', host: 'billyHost'}];
+            sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
+            watchFn(function(err){
+              expect(err).to.not.exist;
+              expect(client1.getListings).have.been.calledOnce;
+              expect(client1.getListings).have.been.calledWith('billy', sinon.match.func);
+              expect(watch.get()).deep.equals(listings);
+
+              client1.getListings.restore();
+
+              expect(hakken.getCoordinators()).deep.equals(['client1', 'client2']);
+              sinon.stub(client1, 'getCoordinators').callsArgWith(0, { message: 'failure!' });
+              poller1(function(err){
+                sinon.stub(client2, 'getListings').callsArgWith(1, null, listings);
+                watchFn(function(err){
+                  expect(err).to.not.exist;
+                  expect(client2.getListings).have.been.calledOnce;
+                  expect(client2.getListings).have.been.calledWith('billy', sinon.match.func);
+                  expect(watch.get()).deep.equals(listings);
+                  done();
+                })
+              });
             });
           });
 
