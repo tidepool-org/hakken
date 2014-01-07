@@ -1,24 +1,24 @@
 {
   "name": "hakken",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Discovery Platform",
-  "keywords": ["discovery"],
-
+  "keywords": [
+    "discovery"
+  ],
   "homepage": "https://github.com/tidepool-org/hakken",
   "bugs": "https://github.com/tidepool-org/hakken/issues",
   "license": "BSD-2-clause",
-
   "author": {
     "name": "Eric Tschetter",
     "email": "cheddar@tidepool.org",
     "url": "https://github.com/cheddar"
   },
   "contributors": [],
-
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/client/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
-
   "dependencies": {
     "async": "0.2.9",
     "bunyan": "0.22.1",
