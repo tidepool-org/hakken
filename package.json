@@ -2,8 +2,23 @@
   "name": "hakken",
   "version": "0.0.1",
   "description": "Discovery Platform",
-  "main": "coordinator.js",
+  "keywords": ["discovery"],
+
+  "homepage": "https://github.com/tidepool-org/hakken",
+  "bugs": "https://github.com/tidepool-org/hakken/issues",
+  "license": "BSD-2-clause",
+
+  "author": {
+    "name": "Eric Tschetter",
+    "email": "cheddar@tidepool.org",
+    "url": "https://github.com/cheddar"
+  },
+  "contributors": [],
+
+  "files": ["lib"],
+  "main": "lib/client/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
+
   "dependencies": {
     "async": "0.2.9",
     "bunyan": "0.22.1",
