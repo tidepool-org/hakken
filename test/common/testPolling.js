@@ -23,7 +23,8 @@ describe('polling.js', function(){
           done();
         }
       },
-      1
+      1,
+      false
     );
   })
 });

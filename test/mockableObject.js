@@ -4,8 +4,7 @@ var expect = fix.expect;
 
 function addFn(object, name) {
   object[name] = function() {
-    console.log(new Error().stack);
-    expect(name).equals("was called when it should not have been");
+    throw new Error(name + " was called, but it wasn't mocked");
   };
 };
 
