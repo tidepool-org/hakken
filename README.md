@@ -32,6 +32,8 @@ setTimeout(function(){
 
 We set timeout to give hakken a chance to lookup the service.  If you do watch.get() immediately after setting the watch, you will not have any nodes because it won't have had a chance to actually find them.
 
+`examples/integrated.js` is also an example script that fires up two coordinators and then fires up a couple of clients to do a publish and a watch.  It's a bit obfuscated by callback wonderfulness (at least I think that's what it is), if you know of an way to make it read easier, I'd love a pull request :).
+
 ## Setting up coordinators
 
 You can run the coordinator by running
