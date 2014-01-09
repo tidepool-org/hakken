@@ -39,7 +39,7 @@ describe("coordinatorServer.js", function(){
     "addListing", "listingHeartbeat", "getServices", "getServiceListings"
   );
 
-  var api
+  var api;
 
   before(function(){
     var gossipServer = require('../../lib/server/coordinatorServer.js')(coordinatorBroker, listingsBroker, config);

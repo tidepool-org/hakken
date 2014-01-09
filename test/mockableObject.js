@@ -52,4 +52,4 @@ exports.reset = function() {
       expect(obj[fn]['restore']).undefined;
     }
   }
-}
+};

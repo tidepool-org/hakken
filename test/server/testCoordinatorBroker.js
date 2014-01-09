@@ -30,7 +30,7 @@ var expect = fixture.expect;
 var sinon = fixture.sinon;
 var mockableObject = fixture.mockableObject;
 
-var makeClient = function(){
+function makeClient(){
   return mockableObject.make("getCoordinators", "addCoordinator", "getHost");
 }
 
@@ -62,7 +62,7 @@ describe("coordinatorBroker.js", function(){
     expect(gossipHandler.getCoordinators()).to.deep.equal([self]);
 
     // Setup the client to return a new coordinator
-    var newCoordinator = {host: 'localhost:2222'}
+    var newCoordinator = {host: 'localhost:2222'};
     sinon.stub(client, "getCoordinators").callsArgWith(0, null, [newCoordinator]);
 
     // The new coordinator list won't have "me", so it should try to register itself
@@ -78,7 +78,7 @@ describe("coordinatorBroker.js", function(){
 
   describe("post-construction", function(){
     beforeEach(function() {
-      coordinatorClientFactory.reset()
+      coordinatorClientFactory.reset();
       mockableObject.reset(polling);
 
       sinon.stub(polling, "repeat");
@@ -102,7 +102,7 @@ describe("coordinatorBroker.js", function(){
         expect(polling.repeat).have.been.calledWith(sinon.match.string, sinon.match.func, config.heartbeatInterval);
 
         // Setup the client to return a new coordinator
-        var newCoordinator = {host: 'localhost', port: 22222}
+        var newCoordinator = {host: 'localhost', port: 22222};
         sinon.stub(client, "getCoordinators").callsArgWith(0, null, [newCoordinator]);
 
         // Call the "repeat" fn with a new coordinator

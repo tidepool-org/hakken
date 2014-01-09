@@ -29,4 +29,4 @@
 
   var config = require('./env.js');
   require('./lib/hakken.js')(config.discovery).server.makeSimple(config.host, config.port).start();
-}).call(this);
+})();

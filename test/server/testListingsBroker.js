@@ -60,7 +60,7 @@ describe("listingsBroker.js", function(){
       mockableObject.reset(polling);
     });
 
-    var heartbeatCheckAt = function(time) {
+    function heartbeatCheckAt(time) {
       timeProvider.getTime.returns(time);
       heartbeatFn(function(){});
     }
