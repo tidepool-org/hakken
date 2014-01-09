@@ -28,7 +28,6 @@ var _ = require('lodash');
 var async = require('async');
 
 var coordinatorClientFactory = require('../lib/common/coordinatorClient.js');
-var hakken = require('../lib/client/hakken.js');
 var log = require('../lib/log.js')('integrated.js');
 var except = require('../lib/common/except.js');
 var pre = require('../lib/common/pre.js');
@@ -49,11 +48,12 @@ var pre = require('../lib/common/pre.js');
   }
 
   function main() {
+    var hakken = require('../lib/hakken.js')(discoveryConfig);
     var conf1 = { host: 'localhost:19000' };
     var conf2 = { host: 'localhost:19001' };
 
-    var server1 = makeCoordinatorServer(conf1);
-    var server2 = makeCoordinatorServer(conf2);
+    var server1 = hakken.server.makeSimple('localhost', 19000);
+    var server2 = hakken.server.makeSimple('localhost', 19001);
 
     server1.start();
     server2.start();
@@ -82,8 +82,8 @@ var pre = require('../lib/common/pre.js');
       );
     }
 
-    var hakkenPublish = hakken(discoveryConfig);
-    var hakkenSubscribe = hakken(discoveryConfig);
+    var hakkenPublish = hakken.client.make();
+    var hakkenSubscribe = hakken.client.make();
 
     function doServices() {
       hakkenPublish.start();

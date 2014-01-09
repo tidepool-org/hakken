@@ -30,7 +30,7 @@ var expect = fixture.expect;
 var sinon = fixture.sinon;
 var mockableObject = fixture.mockableObject;
 
-var hakkenFactory = require('../../lib/client/hakken.js');
+var hakkenFactory = require('../../lib/client/client.js');
 
 var defaultHeartbeat = 20000;
 var defaultPoll = 60000;

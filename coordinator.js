@@ -28,15 +28,5 @@
   'use strict';
 
   var config = require('./env.js');
-
-  function run() {
-    var coordinatorBroker = require('./lib/server/coordinatorBroker.js')(
-      { host: config.host + ':' + config.port },
-      config.discovery
-    );
-    var listingsBroker = require('./lib/server/listingsBroker.js')(config.discovery);
-    require("./lib/server/coordinatorServer.js")(coordinatorBroker, listingsBroker, config.discovery).start();
-  }
-
-  run();
+  require('./lib/hakken.js')(config.discovery).server.makeSimple(config.host, config.port).start();
 }).call(this);

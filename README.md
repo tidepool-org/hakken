@@ -13,15 +13,15 @@ Clients of the discovery system then either
 
 Assuming you have some coordinators up and running you can publish to hakken with
 
-```
-var hakken = require('hakken')({ host: 'coordinator_host:port' });
+``` javascript
+var hakken = require('hakken')({ host: 'coordinator_host:port' }).client.make();
 hakken.publish({ service: 'serviceName', host: 'self_host:port' });
 ```
 
 Then another process can find you with
 
-```
-var hakken = require('hakken')({ host: 'coordinator_host:port' });
+``` javascript
+var hakken = require('hakken')({ host: 'coordinator_host:port' }).client.make();
 var watch = hakken.watch('serviceName', hakken.selectorFns.random);
 
 // Get a working host
@@ -36,17 +36,25 @@ We set timeout to give hakken a chance to lookup the service.  If you do watch.g
 
 ## Setting up coordinators
 
-You can run the coordinator by running
+You can run the coordinator two ways:
 
-```
-node coordinator.js
-```
+1. As a stand-alone server from this project with:
 
-The coordinator takes configuration parameters from environment variables, `env.js` specifies all of the available options, documents them and shows defaults.  So, check it out.
+    ``` bash
+    node coordinator.js
+    ```
+
+    The coordinator takes configuration parameters from environment variables, `env.js` specifies all of the available options, documents them and shows defaults.  So, check it out.
+
+2. Embedded in your own code with
+
+    ``` javascript
+    require('./lib/hakken.js')({host: 'FQDN_discovery_host'}).server.makeSimple('localhost', 123456).start();
+    ```
 
 The recommended deployment configuration is to have at least 2 coordinators running for redundancy.  Put them behind a load balancer and use the address of the load balancer as the host for configuring your hakken clients as well as for the DISCOVERY_HOST parameter.
 
-Putting them behind a load balancer will mean that as new nodes come up, they will eventually gossip around and find each other.  The only gotcha is with the initial setup.  It is possible to have two coordinators behind a load balancer and have them always get routed to themselves when gossiping.  Eventually, randomness from the LB *should* resolve this, but it can also be mitigated by only having one node in the LB at the start.
+Putting them behind a load balancer will mean that as new nodes come up, they will eventually gossip around and find each other.  The only gotcha is with the initial setup.  It is possible to have two coordinators behind a load balancer and have them always get routed to themselves when gossiping.  Eventually, randomness from the LB *should* resolve this, but it can also be mitigated at deploy time by only having one node in the LB at the start.
 
 ### How coordinator gossip works
 
@@ -78,7 +86,7 @@ On a watch, the hakken client will pick ***one*** coordinator and poll it at `DI
 2. If there is an issue talking to the chosen coordinator
     1. The current set of listings is untouched
     1. The bad coordinator is removed
-    1. Another coordinator is chosen.
+    1. Another coordinator is chosen
 3. If no coordinators are available
     1. The current set of listings remains untouched
-    1. It keeps looking for a coordinator to update from
+    1. The client keeps looking for a coordinator to update from
