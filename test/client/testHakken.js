@@ -269,14 +269,12 @@ describe('hakken.js', function(){
         describe("with watch", function(){
           var watchFn;
           var watch;
-          var transformFn = function(arg) { return arg; };
 
           beforeEach(function(){
             mockableObject.reset(polling);
             sinon.stub(polling, 'repeat');
 
-            function delegate(){ return transformFn.apply(null, Array.prototype.slice.call(arguments, 0)) };
-            watch = hakken.watch('billy', delegate);
+            watch = hakken.watch('billy', { tier: '1', tear: function(obj) { return obj.tear === '1'; } });
 
             expect(polling.repeat).have.been.calledOnce;
             expect(polling.repeat).have.been.calledWith('service-watch-billy', sinon.match.func, defaultHeartbeat);
@@ -289,7 +287,7 @@ describe('hakken.js', function(){
           });
 
           it("only checks one coordinator for watch", function(done){
-            var listings = [{service: 'billy', host: 'billyHost'}];
+            var listings = [{service: 'billy', host: 'billyHost', tier: '1', tear: '1'}];
             sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
             watchFn(function(err){
               expect(err).to.not.exist;
@@ -300,8 +298,24 @@ describe('hakken.js', function(){
             });
           });
 
+          it("filters listings based on the filter it was given", function(done){
+            var listings = [
+              {service: 'billy', host: 'billyHost', tier: '1', tear: '1'},
+              {service: 'billy', host: 'billyHost2', tier: '1', tear: '2'},
+              {service: 'billy', host: 'billyHost3', tier: '2', tear: '1'}
+            ];
+            sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
+            watchFn(function(err){
+              expect(err).to.not.exist;
+              expect(client1.getListings).have.been.calledOnce;
+              expect(client1.getListings).have.been.calledWith('billy', sinon.match.func);
+              expect(watch.get()).deep.equals([listings[0]]);
+              done();
+            });
+          });
+
           it("falls back to other coordinators on coordinator failure", function(done){
-            var listings = [{service: 'billy', host: 'billyHost'}];
+            var listings = [{service: 'billy', host: 'billyHost', tier: '1', tear: '1'}];
             sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
             watchFn(function(err){
               expect(err).to.not.exist;
@@ -327,7 +341,7 @@ describe('hakken.js', function(){
           });
 
           it("maintains old list of results on error", function(done){
-            var listings = [{service: 'billy', host: 'billyHost'}];
+            var listings = [{service: 'billy', host: 'billyHost', tier: '1', tear: '1'}];
             sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
             watchFn(function(err){
               expect(err).to.not.exist;
@@ -343,28 +357,6 @@ describe('hakken.js', function(){
                 expect(watch.get()).deep.equals(listings);
                 done();
               });
-            });
-          });
-
-          it("passes args to and transforms results with the selection function", function(done){
-            var listings = [{service: 'billy', host: 'billyHost'}];
-            sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
-            watchFn(function(err){
-              expect(err).to.not.exist;
-              expect(client1.getListings).have.been.calledOnce;
-              expect(client1.getListings).have.been.calledWith('billy', sinon.match.func);
-              expect(watch.get()).deep.equals(listings);
-
-              transformFn = function(arg, otherArg, yetAnotherArg) {
-                expect(otherArg).equals('other');
-                expect(yetAnotherArg).equals('yetAnother');
-                expect(arg).equals(listings);
-                return 'gotcha!';
-              };
-
-              expect(watch.get('other', 'yetAnother')).equals('gotcha!');
-
-              done();
             });
           });
         });
