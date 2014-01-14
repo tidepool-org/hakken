@@ -115,8 +115,8 @@ describe('hakken.js', function(){
         mockableObject.reset(polling);
       });
 
-      it("stops when stopped", function(){
-        hakken.stop();
+      it("stops when closed", function(){
+        hakken.close();
         resyncFn(function(err){
           expect(err).to.equal('not started!');
         });
