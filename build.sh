@@ -1,6 +1,9 @@
 #! /bin/bash -eu
 
-rm -r node_modules
+rm -rf node_modules
 npm install .
 ./node_modules/.bin/mocha test
-node example/integrated.js
+for file in `ls example/*.js`; do
+  echo "RUNNING file[${file}]"
+  node $file
+done;
