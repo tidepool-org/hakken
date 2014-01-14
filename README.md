@@ -34,6 +34,15 @@ We set timeout to give hakken a chance to lookup the service.  If you do watch.g
 
 `examples/integrated.js` is also an example script that fires up two coordinators and then fires up a couple of clients to do a publish and a watch.  It's a bit obfuscated by callback wonderfulness (at least I think that's what it is), if you know of an way to make it read easier, I'd love a pull request :).
 
+### Client Configuration
+
+When dealing with the client methods, the following configuration options are available.  But you should generally only need to specify the `host`.
+
+* `host` - required, the host used by the client to find the coordinators
+* `heartbeatInterval` - optional (default: 20000), the interval to check for changes on the coordinator.  This should really be the same for all nodes and should be something discovered from the coordinator, but it's not yet.
+* `pollInterval` - optional (default: 60000), the interval to check back with each known coordinator for changes to the set of coordinators
+* `resyncInterval` - optional (default: pollInterval * 10), the interval to check back with the `host` for changes to the set of coordinators
+
 ## Setting up coordinators
 
 You can run the coordinator two ways:
