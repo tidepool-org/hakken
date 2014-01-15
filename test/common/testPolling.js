@@ -26,8 +26,6 @@
 
 var fixture = require('../fixture.js');
 
-var expect = fixture.expect;
-
 describe('polling.js', function(){
   it("should repeat", function(done){
     var polling = require('../../lib/common/polling.js');
