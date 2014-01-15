@@ -22,7 +22,7 @@ Then another process can find you with
 
 ``` javascript
 var hakken = require('hakken')({ host: 'coordinator_host:port' }).client.make();
-var watch = hakken.watch('serviceName', hakken.selectorFns.random);
+var watch = hakken.watchers.random().wrap(hakken.watch('serviceName'));
 
 // Get a working host
 setTimeout(function(){
