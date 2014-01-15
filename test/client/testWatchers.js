@@ -98,8 +98,15 @@ describe('watchers.js', function(){
 
     var watcher = {
       get: function() {
-        return  array; }
+        return  array;
+      }
     };
+
+    it('should have a start and close method', function(){
+      var watcher = watchers.buildWrapper({fn: 'random'}).wrap(watcher);
+      expect(watcher).to.respondTo('start');
+      expect(watcher).to.respondTo('close');
+    });
 
     it('should randomly choose an element', function(){
       var results = watchers.buildWrapper({fn: 'random'}).wrap(watcher).get();

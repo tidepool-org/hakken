@@ -143,8 +143,10 @@ describe('hakken.js', function(){
       });
 
       it("never updates the watch without coordinators", function(done){
-        sinon.stub(polling, 'repeat');
         var watch = hakken.watch('billy');
+
+        sinon.stub(polling, 'repeat');
+        watch.start();
 
         expect(polling.repeat).have.been.calledOnce;
 
@@ -154,6 +156,19 @@ describe('hakken.js', function(){
           expect(watch.get()).is.empty;
           done();
         });
+      });
+
+      it("throws an exception when watch.get() is called without the watch being started", function(){
+        var watch = hakken.watch('billy');
+
+        var e = null;
+        try {
+          watch.get();
+        }
+        catch (err) {
+          e = err;
+        }
+        expect(e).to.exist;
       });
 
       describe('with coordinators', function(){
@@ -272,9 +287,10 @@ describe('hakken.js', function(){
 
           beforeEach(function(){
             mockableObject.reset(polling);
-            sinon.stub(polling, 'repeat');
-
             watch = hakken.watch('billy', { tier: '1', tear: function(obj) { return obj.tear === '1'; } });
+
+            sinon.stub(polling, 'repeat');
+            watch.start();
 
             expect(polling.repeat).have.been.calledOnce;
             expect(polling.repeat).have.been.calledWith('service-watch-billy', sinon.match.func, defaultHeartbeat);
