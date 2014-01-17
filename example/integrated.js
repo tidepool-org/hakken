@@ -91,7 +91,7 @@ var pre = require('../lib/common/pre.js');
 
       var listing = { service: 'integration', host: 'localhost:1978', extra: 'property'};
       hakkenPublish.publish(listing, function(err){
-        var watch = hakkenSubscribe.watch('integration');
+        var watch = hakkenSubscribe.randomWatch('integration');
         watch.start();
 
         log.info('Watch currently shows[%j]', watch.get());
