@@ -45,6 +45,8 @@ When dealing with the client methods, the following configuration options are av
 * `pollInterval` - optional (default: 60000), the interval to check back with each known coordinator for changes to the set of coordinators
 * `resyncInterval` - optional (default: pollInterval * 10), the interval to check back with the `host` for changes to the set of coordinators
 
+Note that the client configuration only takes a single `host`.  The client will use that single `host` parameter to find other coordinators and then it will use the whole set of coordinators that it finds in order to do its job.  This means that even though you might have multiple coordinators, you should still only pass a single `host`, hakken will do the stuff to make sure it is leveraging all of the servers available on its own.
+
 ## Setting up coordinators
 
 You can run the coordinator two ways:
