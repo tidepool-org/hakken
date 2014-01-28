@@ -26,17 +26,16 @@ Then another process can find you with
 var hakken = require('hakken')({ host: 'host_of_a_coordinator:port' }).client.make();
 hakken.start(function(err){
   var watch = hakken.randomWatch('serviceName');
-  watch.start();
-
-  // Get a working host
-  setTimeout(function(){
-    var host = watch.get();
+  watch.start(function(err){
+    // Get a working host
+    var hostList = watch.get();
+    console.log(hostList);
     watch.close();
-  }, 1000);
+  });
 });
 ```
 
-We set timeout to give hakken a chance to lookup the service.  If you do watch.get() immediately after setting the watch, you will not have any nodes because it won't have had a chance to actually find them.
+We use the optional callbacks on the `start()` methods to make sure we've communicated with a coordinator at least once before calling `get()`.  If you do not use a callback on the `start()` method and call `get()` immediately, then it will return an empty list because it won't have had a chance to actually communicate with the coordinator.
 
 When working with hakken, most processes will not need more than one instance of a hakken client.  You can publish multiple services as well as attach multiple different watches from the same client object.  The reason to have multiple different client objects is if you need them to have a different set of configuration parameters, like `host` or `heartbeatInterval`.  In fact, multiple different hakken instances is going to add extra overhead to the whole system and should be avoided unless absolutely necessary.
 
