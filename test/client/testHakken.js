@@ -40,7 +40,7 @@ describe('hakken.js', function(){
   describe('publish', function() {
     var coordinatorClientFactory = sinon.stub();
     var polling = mockableObject.make('repeat');
-    var hakkenConfig = { host: 'test' };
+    var hakkenConfig = { host: 'test', heartbeatInterval: defaultHeartbeat, pollInterval: defaultPoll, resyncInterval: defaultResync };
     var testClient = mockableObject.make('getCoordinators', 'getHost');
 
     var hakken;
@@ -53,14 +53,7 @@ describe('hakken.js', function(){
       hakken = hakkenFactory(hakkenConfig, null, coordinatorClientFactory, polling);
 
       expect(coordinatorClientFactory).have.been.calledOnce;
-      expect(coordinatorClientFactory).have.been.calledWith(
-        {
-          host: hakkenConfig.host,
-          heartbeatInterval: defaultHeartbeat,
-          pollInterval: defaultPoll,
-          resyncInterval: defaultResync
-        }
-      );
+      expect(coordinatorClientFactory).have.been.calledWith(hakkenConfig);
       coordinatorClientFactory.reset();
     });
 
