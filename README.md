@@ -22,7 +22,7 @@ Then another process can find you with
 
 ``` javascript
 var hakken = require('hakken')({ host: 'coordinator_host:port' }).client.make();
-var watch = hakken.watchRandom('serviceName');
+var watch = hakken.randomWatch('serviceName');
 watch.start();
 
 // Get a working host
@@ -44,6 +44,8 @@ When dealing with the client methods, the following configuration options are av
 * `heartbeatInterval` - optional (default: 20000), the interval to check for changes on the coordinator.  This should really be the same for all nodes and should be something discovered from the coordinator, but it's not yet.
 * `pollInterval` - optional (default: 60000), the interval to check back with each known coordinator for changes to the set of coordinators
 * `resyncInterval` - optional (default: pollInterval * 10), the interval to check back with the `host` for changes to the set of coordinators
+
+Note that the client configuration only takes a single `host`.  The client will use that single `host` parameter to find other coordinators and then it will use the whole set of coordinators that it finds in order to do its job.  This means that even though you might have multiple coordinators, you should still only pass a single `host`, hakken will do the stuff to make sure it is leveraging all of the servers available on its own.
 
 ## Setting up coordinators
 
