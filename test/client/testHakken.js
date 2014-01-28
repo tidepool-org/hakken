@@ -191,7 +191,7 @@ describe('hakken.js', function(){
             poller2 = polling.repeat.getCall(1).args[1];
             expect(hakken.getCoordinators()).deep.equals(['client1', 'client2']);
 
-            mockableObject.reset(client1, client2, poller1, poller2);
+            mockableObject.reset(client1, client2, poller1, poller2, polling);
             sinon.stub(client1, 'getHost').returns('client1');
             sinon.stub(client2, 'getHost').returns('client2');
             done();
@@ -270,6 +270,22 @@ describe('hakken.js', function(){
             expect(client1.listingHeartbeat).have.been.calledWith(listing, sinon.match.func);
             expect(client2.listingHeartbeat).have.been.calledOnce;
             expect(client2.listingHeartbeat).have.been.calledWith(listing, sinon.match.func);
+            done();
+          });
+        });
+
+        it("should call the callback on a watch once it successfully gets some listings", function(done){
+          var listings = [{service: 'billy', host: 'billyHost', tier: '1', tear: '1'}];
+          sinon.stub(client1, 'getListings').callsArgWith(1, null, listings);
+          watch = hakken.watch('billy', { tier: '1', tear: function(obj) { return obj.tear === '1'; } });
+
+          sinon.stub(polling, 'repeat');
+          watch.start(function(err){
+            expect(polling.repeat).to.have.not.been.calledOnce;
+            expect(client1.getListings).to.have.been.calledOnce;
+            expect(client1.getListings).to.have.been.calledWith('billy', sinon.match.func);
+            expect(err).to.not.exist;
+            watch.close();
             done();
           });
         });
