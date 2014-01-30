@@ -35,7 +35,7 @@ hakken.start(function(err){
 });
 ```
 
-We use the optional callbacks on the `start()` methods to make sure we've communicated with a coordinator at least once before calling `get()`.  If you do not use a callback on the `start()` method and call `get()` immediately, then it will return an empty list because it won't have had a chance to actually communicate with the coordinator.
+We use the optional callbacks on the `start()` methods to make sure we've communicated with a coordinator at least once before calling `get()`.  If you do not use a callback on the `start()` method and call `get()` immediately, then it will return an empty list because it won't have had a chance to actually communicate with the coordinator.  See the section on watches below to get more detail on the expected usage of watches.
 
 When working with hakken, most processes will not need more than one instance of a hakken client.  You can publish multiple services as well as attach multiple different watches from the same client object.  The reason to have multiple different client objects is if you need them to have a different set of configuration parameters, like `host` or `heartbeatInterval`.  In fact, multiple different hakken instances is going to add extra overhead to the whole system and should be avoided unless absolutely necessary.
 
