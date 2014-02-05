@@ -17,11 +17,10 @@
 
 var _ = require('lodash');
 var async = require('async');
+var except = require('amoeba').except;
 
 var coordinatorClientFactory = require('../lib/common/coordinatorClient.js');
 var log = require('../lib/log.js')('integrated.js');
-var except = require('../lib/common/except.js');
-var pre = require('../lib/common/pre.js');
 
 (function(){
   var discoveryConfig = {
@@ -31,12 +30,6 @@ var pre = require('../lib/common/pre.js');
     resyncInterval: 6000,
     missedHeartbeatsAllowed: 3
   };
-
-  function makeCoordinatorServer(config) {
-    var coordinatorBroker = require('../lib/server/coordinatorBroker.js')(config, discoveryConfig);
-    var listingsBroker = require('../lib/server/listingsBroker.js')(discoveryConfig);
-    return require("../lib/server/coordinatorServer.js")(coordinatorBroker, listingsBroker, config);
-  }
 
   function main() {
     var hakken = require('../lib/hakken.js')(discoveryConfig);
@@ -73,8 +66,8 @@ var pre = require('../lib/common/pre.js');
       );
     }
 
-    var hakkenPublish = hakken.client.make();
-    var hakkenSubscribe = hakken.client.make();
+    var hakkenPublish = hakken.client();
+    var hakkenSubscribe = hakken.client();
 
     function doServices() {
       hakkenPublish.start();

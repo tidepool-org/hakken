@@ -16,14 +16,15 @@ Hakken is 100% eventually consistent.  Operations often take time to propagate t
 Assuming you have some coordinators up and running you can publish to hakken with
 
 ``` javascript
-var hakken = require('hakken')({ host: 'host_of_a_coordinator:port' }).client.make();
+var hakken = require('hakken')({ host: 'host_of_a_coordinator:port' }).client();
+hakken.start();
 hakken.publish({ service: 'serviceName', host: 'self_host:port' });
 ```
 
 Then another process can find you with
 
 ``` javascript
-var hakken = require('hakken')({ host: 'host_of_a_coordinator:port' }).client.make();
+var hakken = require('hakken')({ host: 'host_of_a_coordinator:port' }).client();
 hakken.start(function(err){
   var watch = hakken.randomWatch('serviceName');
   watch.start(function(err){
