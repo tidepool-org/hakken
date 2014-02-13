@@ -14,11 +14,9 @@
     "url": "https://github.com/cheddar"
   },
   "contributors": [],
-  "bin": {
-    "tidepool-coordinator": "coordinator.js"
-  },
   "files": [
-    "lib"
+    "lib",
+    "coordinator.js"
   ],
   "main": "lib/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
