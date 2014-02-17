@@ -15,7 +15,8 @@
   },
   "contributors": [],
   "files": [
-    "lib"
+    "lib",
+    "coordinator.js"
   ],
   "main": "lib/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
