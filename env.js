@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-var config = require('./lib/common/config.js');
+var config = require('amoeba').config;
 
 module.exports = (function(){
   var env = {};

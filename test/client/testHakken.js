@@ -80,6 +80,44 @@ describe('hakken.js', function(){
       });
     });
 
+    describe('watcherFromConfig', function(){
+      it('calls randomWatch with config stuff', function(){
+        var config = {
+          type: 'random',
+          service: 'billy',
+          filter: { tier: '1' },
+          config: { numToPull: 3 }
+        };
+
+        var mockClient = mockableObject.make('randomWatch');
+        sinon.stub(mockClient, 'randomWatch').returns('1234');
+        var watch = hakken.watchFromConfig.bind(mockClient)(config);
+
+        expect(watch).equals('1234');
+        expect(mockClient.randomWatch).to.have.been.calledOnce;
+        expect(mockClient.randomWatch).to.have.been.calledWith(
+          config.service,
+          config.filter,
+          config.config
+        );
+      });
+
+      it('calls randomWatch with config stuff', function(){
+        var config = {
+          type: 'static',
+          hosts: [ { 123: 456 }]
+        };
+
+        var mockClient = mockableObject.make('staticWatch');
+        sinon.stub(mockClient, 'staticWatch').returns('1234');
+        var watch = hakken.watchFromConfig.bind(mockClient)(config);
+
+        expect(watch).equals('1234');
+        expect(mockClient.staticWatch).to.have.been.calledOnce;
+        expect(mockClient.staticWatch).to.have.been.calledWith(config.hosts);
+      });
+    });
+
     describe("started", function(){
       var resyncFn;
       var publishFn;
