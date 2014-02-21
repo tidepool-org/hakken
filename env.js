@@ -43,5 +43,9 @@ module.exports = (function(){
   // coordinators by asking discovery.host for the current set of coordinators
   env.discovery.resyncPollInterval = config.fromEnvironment('RESYNC_POLL_INTERVAL', null);
 
+  // A config to allow you to turn off heartbeat logs.  They are chatty, but useful to help debug things, so it's
+  // up to you.
+  env.discovery.logHeartbeats = config.fromEnvironment('LOG_HEARTBEATS', 'true') === 'true';
+
   return env;
 })();

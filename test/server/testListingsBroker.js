@@ -26,7 +26,8 @@ describe("listingsBroker.js", function(){
 
   var config = { 
     heartbeatInterval: 60000,
-    missedHeartbeatsAllowed: 3
+    missedHeartbeatsAllowed: 3,
+    logHeartbeats: false
   };
   var listingsBroker;
   var heartbeatFn;

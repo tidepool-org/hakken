@@ -102,6 +102,16 @@ describe('hakken.js', function(){
         );
       });
 
+      it('converts a string argument into a randomWatch', function(){
+        var mockClient = mockableObject.make('randomWatch');
+        sinon.stub(mockClient, 'randomWatch').returns('1234');
+        var watch = hakken.watchFromConfig.bind(mockClient)('billy');
+
+        expect(watch).equals('1234');
+        expect(mockClient.randomWatch).to.have.been.calledOnce;
+        expect(mockClient.randomWatch).to.have.been.calledWith('billy');
+      });
+
       it('calls randomWatch with config stuff', function(){
         var config = {
           type: 'static',
