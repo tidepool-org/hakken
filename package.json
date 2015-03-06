@@ -21,7 +21,7 @@
   "main": "lib/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
   "dependencies": {
-    "amoeba": "0.1.2",
+    "amoeba": "0.1.4",
     "async": "0.9.0",
     "bunyan": "1.3.4",
     "lodash": "3.4.0",
