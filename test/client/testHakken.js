@@ -26,12 +26,13 @@ var hakkenFactory = require('../../lib/client/client.js');
 var defaultHeartbeat = 20000;
 var defaultPoll = 60000;
 var defaultResync = 60000 * 10;
+var defaultSkipHakken = false;
 
 describe('hakken.js', function(){
   describe('publish', function() {
     var coordinatorClientFactory = sinon.stub();
     var polling = mockableObject.make('repeat');
-    var hakkenConfig = { host: 'test', heartbeatInterval: defaultHeartbeat, pollInterval: defaultPoll, resyncInterval: defaultResync };
+    var hakkenConfig = { host: 'test', heartbeatInterval: defaultHeartbeat, pollInterval: defaultPoll, resyncInterval: defaultResync, skipHakken: defaultSkipHakken };
     var testClient = mockableObject.make('getCoordinators', 'getHost');
 
     var hakken;
