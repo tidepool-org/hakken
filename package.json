@@ -1,6 +1,6 @@
 {
   "name": "hakken",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Discovery Platform",
   "keywords": [
     "discovery"
@@ -21,20 +21,20 @@
   "main": "lib/hakken.js",
   "repository": "https://github.com/tidepool-org/hakken.git",
   "dependencies": {
-    "amoeba": "0.4.1",
-    "async": "0.9.0",
-    "bunyan": "1.4.0",
-    "lodash": "3.4.0",
-    "restify": "2.8.5",
-    "superagent": "0.21.0"
+    "amoeba": "0.4.2",
+    "async": "3.0.0",
+    "bunyan": "1.8.12",
+    "lodash": "4.17.11",
+    "restify": "8.3.2",
+    "superagent": "5.0.5"
   },
   "devDependencies": {
-    "chai": "2.1.0",
-    "grunt-mocha-test": "0.12.7",
-    "mocha": "2.1.0",
-    "sinon": "1.12.2",
-    "sinon-chai": "2.7.0",
-    "supertest": "0.15.0"
+    "chai": "4.2.0",
+    "grunt-mocha-test": "0.13.3",
+    "mocha": "6.1.4",
+    "sinon": "7.3.2",
+    "sinon-chai": "3.3.0",
+    "supertest": "4.0.2"
   },
   "scripts": {
     "start": "node coordinator.js",

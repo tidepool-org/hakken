@@ -40,6 +40,7 @@ describe('hakken.js', function(){
     beforeEach(function () {
       coordinatorClientFactory.reset();
       mockableObject.reset(polling, testClient);
+      sinon.stub(polling, 'repeat');
 
       coordinatorClientFactory.returns(testClient);
       hakken = hakkenFactory(hakkenConfig, null, coordinatorClientFactory, polling);
@@ -50,7 +51,6 @@ describe('hakken.js', function(){
     });
 
     it('starts unconditionally with no callback', function(){
-      sinon.stub(polling, 'repeat');
       hakken.start();
       expect(polling.repeat).have.been.calledTwice;
       expect(polling.repeat).have.been.calledWith('coordinator-resync', sinon.match.func, defaultResync);
@@ -70,7 +70,6 @@ describe('hakken.js', function(){
 
     it("starts polling if it gets some coordinators when given a callback", function(done){
       sinon.stub(testClient, 'getCoordinators').callsArgWith(0, null, []);
-      sinon.stub(polling, 'repeat');
       hakken.start(function(err) {
         expect(err).to.not.exist;
         expect(testClient.getCoordinators).have.been.calledOnce;

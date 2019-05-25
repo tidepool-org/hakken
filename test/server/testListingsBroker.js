@@ -88,9 +88,8 @@ describe("listingsBroker.js", function(){
     it("should automatically remove listings based on a lack of heartbeats", function() {
       var anotherListing = {service: 'testService', host: 'localhost:2224', name:'007'};
 
-      sinon.stub(timeProvider, "getTime");
+      sinon.stub(timeProvider, "getTime").returns(0);
 
-      timeProvider.getTime.returns(0);
       listingsBroker.addListing(listing1);
 
       timeProvider.getTime.returns(config.heartbeatInterval * 10);

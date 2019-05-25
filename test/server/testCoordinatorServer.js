@@ -31,9 +31,10 @@ describe("coordinatorServer.js", function(){
   );
 
   var api;
+  var gossipServer;
 
   before(function(){
-    var gossipServer = require('../../lib/server/coordinatorServer.js')(coordinatorBroker, listingsBroker, config);
+    gossipServer = require('../../lib/server/coordinatorServer.js')(coordinatorBroker, listingsBroker, config);
     gossipServer.start();
 
     api = supertest('http://localhost:' + config.port);
@@ -41,6 +42,10 @@ describe("coordinatorServer.js", function(){
 
   beforeEach(function() {
     mockableObject.reset(coordinatorBroker, listingsBroker);
+  });
+
+  after(function() {
+    gossipServer.close();
   });
 
   describe("v1", function(){
@@ -103,6 +108,7 @@ describe("coordinatorServer.js", function(){
 
       it("calls heartbeat on POST with heartbeat=true", function(done){
         sinon.stub(listingsBroker, 'listingHeartbeat');
+        sinon.stub(listingsBroker, 'addListing');
         var agent = {host: "billy", payload:"yay"};
 
         api.post('')
@@ -131,6 +137,7 @@ describe("coordinatorServer.js", function(){
         api.get('/billy')
            .expect(404, done);
       });      
-    })
+    });
   });
 });
+
